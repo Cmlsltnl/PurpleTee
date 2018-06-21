@@ -6,10 +6,11 @@ const route = express.Router();
 route.use('/', express.static(path.join(__dirname, '../public_static')));
 
 route.get('/', (req,res)=>{
-    res.render('index', {message: req.flash('homePgMsg')});
+    res.render('index', {message: req.flash('homePgMsg'), fail: req.flash('homePgFail')});
 });
 
 // Sub Routes
 route.use('/', require('./user'));
+route.use('/admin', require('./admin'));
 
 module.exports = route;

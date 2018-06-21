@@ -17,7 +17,17 @@
                         &times; <!--  x button -->
                     </span>
                 </button>
-                <%= message%>
+                <%= message %>
+            </div>
+        <% } %>
+        <% if(fail.length){ %>
+            <div class="alert alert-danger alert-dismissable fade show">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">
+                        &times; <!--  x button -->
+                    </span>
+                </button>
+                <%= fail %>
             </div>
         <% } %>
         <h2>Welcome to PurpleTee!!</h2>
