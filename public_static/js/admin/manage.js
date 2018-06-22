@@ -3,7 +3,7 @@ $(()=>{
 })
 
 function loadAdmin() {
-    $.get('/api/admins')
+    $.get('/api/admin')
         .then(admins => {
             admins.forEach(admin => {
                 appendAdmin(admin);

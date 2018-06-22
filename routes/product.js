@@ -65,6 +65,10 @@ route.post('/upload', auth.isLoggedIn, auth.isAdmin, (req,res) => {
         });
 })
 
+route.get('/', (req,res)=>{
+    res.render('product/products.ejs');
+})
+
 route.get('/:id', (req,res)=>{
     models.Product
         .findById(req.params.id)

@@ -116,13 +116,33 @@ route.get('/logout', (req, res)=>{
     }
     res.redirect('/');
 });
+route.get('/profile', (req,res) => {
+    if(!req.query.userId){
+        req.flash('homePgFail', 'Page does not exist.');
+        return res.redirect('/');
+    }
+    models.User
+        .findById(req.query.userId)
+        .then(profileUser => {
+            if(profileUser)
+                res.redirect(`/profile/${profileUser.username}`);
+            else {
+                req.flash('homePgFail','No such User exists.');
+                res.redirect('/');
+            }
+        })
+        .catch(err=> {
+            console.log(err);
+            res.redirect('/');
+        })
+})
 route.get('/profile/:username', (req,res,next) => {
     models.User
         .findOne({username: req.params.username})
         .then(profileUser => {
             if(profileUser)
                 res.render('user/profile', {profileUser, message: req.flash('editSuccess')});
-            else{
+            else {
                 req.flash('homePgFail','No such User exists.');
                 res.redirect('/');
             }
@@ -140,5 +160,9 @@ route.post('/login', passport.authenticate('local', {
     successFlash: true,
     failureFlash: true
 }))
+
+route.get('/users', (req,res)=>{
+    res.render('user/users.ejs');
+})
 
 module.exports = route;
