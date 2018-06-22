@@ -7,7 +7,12 @@ const productSchema = mongoose.Schema({
     designer : {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
-    }
+    },
+    approvedBy : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user'
+    },
+    status : String
 }, {
     usePushEach : true
 });

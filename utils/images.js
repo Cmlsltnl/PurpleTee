@@ -23,4 +23,4 @@ cloudinary.config({
     api_secret: CLOUDINARY.API_SECRET
 });
 
-module.exports = { upload, cloudinary };
+module.exports = { upload, storage, cloudinary };

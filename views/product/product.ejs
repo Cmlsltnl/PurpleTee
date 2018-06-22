@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product | <%= product.name %></title>
+    
+    <% include ../partials/header.ejs %>
+
+</head>
+<body>
+    <% include ../partials/navbar.ejs %>
+    <div class="container mt-4">
+        <% if(success.length){ %>
+            <div class="alert alert-success alert-dismissable fade show">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">
+                        &times; <!--  x button -->
+                    </span>
+                </button>
+                <%= success %>
+            </div>
+        <% } %>
+        <% if(fail.length){ %>
+            <div class="alert alert-danger alert-dismissable fade show">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">
+                        &times; <!--  x button -->
+                    </span>
+                </button>
+                <%= fail %>
+            </div>
+        <% } %>
+        <h2><%= product.name %> </h2>
+        <% if(product.images.length) { %>
+            <div class="row">
+                <% product.images.forEach(image => { %>
+                    <div class="col-lg-4 col-sm-12">
+                        <img src='<%= image%>' class="img-fluid">
+                    </div>
+                <% }) %>
+            </div>
+        <% } %>
+        <p>Description: <%= product.description%></p>
+        <p>Status: <%= product.status%></p>
+        <p>Designer: <a href="/profile/<%= product.designer.username%>">@<%= product.designer.username%></a></p>
+        <% if(user && user.isAdmin) { %>
+            <p>Approved By: <a href="/profile/<%= product.approvedBy.username%>">@<%= product.approvedBy.username%></a></p>
+        <% } %>
+    </div>
+</body>
+</html>
