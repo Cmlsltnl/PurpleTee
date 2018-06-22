@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile | <%= profileUser.name%></title>
+    
+    <% include ../partials/header.ejs %>
+    <script src="/js/profile.js"></script>
+
+
+</head>
+<body>
+    
+    <% include ../partials/navbar.ejs %>
+    <div class="container">
+        <% if(message.length){ %>
+            <div class="alert alert-success alert-dismissable fade show" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">
+                        &times; <!--  x button -->
+                    </span>
+                </button>
+                <%= message%>
+            </div>
+        <% } %>
+    
+        <div class="row">
+            <div class="col-sm-6 col-md-4">
+                <% if(profileUser.orientation=='on') { %>
+                    <img class="on-image" src="<%= profileUser.picture %>" alt="">
+                <% } else if(profileUser.orientation=='off') { %>
+                    <img class="off-image" src="<%= profileUser.picture %>" alt="">
+                <% } else { %>
+                    <img class="grav-image" src="<%= profileUser.picture %>" alt="">
+                <% } %>                    
+                <br/>
+                <p>@<%= profileUser.username %></p> 
+                <% if(profileUser.isAdmin) { %>
+                    <div class="adminBox">Admin</div>
+                <% } %>   
+                <p>Name: <%= profileUser.name %></p>
+                <p>Email: <%= profileUser.email %></p>
+            
+                <% if (profileUser.address === "" || typeof profileUser.address === 'undefined')  { %>
+                    <p>Address: <span>No address specified.</span></p>
+            
+                <% } else { %>
+            
+                <p>Address: <%= profileUser.address %></p>
+            
+                <% } %>
+                <% if(user && user.id === profileUser.id) { %>
+                    <a href="/profile/<%= profileUser.username%>/edit" class="btn btn-primary btn-lg">Edit Profile</a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

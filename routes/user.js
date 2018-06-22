@@ -57,9 +57,17 @@ route.post('/signup', upload.single('profilePic'), (req,res,next) => {
      
     models.User
         .findOne({email: req.body.email})
-        .then(existingUser =>{
-            if(existingUser){
+        .then(existingEmailUser =>{
+            if(existingEmailUser){
                 req.flash('errors', 'Email already exists!');
+                return res.redirect('/signup');
+            } else {
+                return models.User.findOne({username: req.body.username});
+            }
+        })
+        .then(existingUsernameUser => {
+            if(existingUsernameUser){
+                req.flash('errors', 'Username already exists!');
                 return res.redirect('/signup');
             } else {
                 return uploadImageandCreateUser(req);
@@ -74,7 +82,7 @@ route.post('/signup', upload.single('profilePic'), (req,res,next) => {
             res.redirect('/signup');
         })
 })
-route.post('/edit-profile', auth.isLoggedIn, upload.single('profilePic'), (req,res,next) => {
+route.post('/profile/:username/edit', auth.isLoggedIn, auth.checkCorrectUser, upload.single('profilePic'), (req,res,next) => {
     models.User
         .findById(req.user._id)
         .then(user => {
@@ -82,11 +90,11 @@ route.post('/edit-profile', auth.isLoggedIn, upload.single('profilePic'), (req,r
         })
         .then(user => {
             req.flash('editSuccess', 'Successfully edited your profile!');
-            res.redirect('/profile');
+            res.redirect(`/profile/${user.username}`);
         })
         .catch(err => {
             return next(err);
-            res.redirect('/profile');
+            res.redirect(`/profile/${user.username}`);
         })
 })
 
@@ -94,12 +102,12 @@ route.post('/edit-profile', auth.isLoggedIn, upload.single('profilePic'), (req,r
 route.get('/signup', (req,res) => {
     if(req.user)
         return res.redirect('/');
-    res.render('signup', {errors: req.flash('errors')});
+    res.render('user/signup', {errors: req.flash('errors')});
 })
 route.get('/login', (req,res) => {
     if(req.user)
         return res.redirect('/');
-    res.render('login', {message: req.flash('loginMsg'), successMsg: req.flash('signupSuccess')});
+    res.render('user/login', {message: req.flash('loginMsg'), successMsg: req.flash('signupSuccess')});
 })
 route.get('/logout', (req, res)=>{
     if(req.user){
@@ -108,18 +116,23 @@ route.get('/logout', (req, res)=>{
     }
     res.redirect('/');
 });
-route.get('/profile', auth.isLoggedIn, (req,res,next) => {
+route.get('/profile/:username', (req,res,next) => {
     models.User
-        .findOne({_id: req.user._id})
-        .then(user => {
-            res.render('profile', {user, message: req.flash('editSuccess')});
+        .findOne({username: req.params.username})
+        .then(profileUser => {
+            if(profileUser)
+                res.render('user/profile', {profileUser, message: req.flash('editSuccess')});
+            else{
+                req.flash('homePgFail','No such User exists.');
+                res.redirect('/');
+            }
         })
         .catch(err => {
             return next(err);
         })
 })
-route.get('/edit-profile', auth.isLoggedIn, (req,res,next) =>{
-    res.render('editProfile.ejs');
+route.get('/profile/:username/edit', auth.isLoggedIn, auth.checkCorrectUser, (req,res,next) =>{
+    res.render('user/editProfile.ejs');
 })
 route.post('/login', passport.authenticate('local', {
     successRedirect: '/',

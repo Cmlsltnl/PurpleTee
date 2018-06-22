@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <title>Signup</title>
     
-    <% include ./partials/header.ejs %>
+    <% include ../partials/header.ejs %>
 
 </head>
 <body>
 
-    <% include ./partials/navbar.ejs %>
+    <% include ../partials/navbar.ejs %>
 
     <div class="container mt-4">
         <% if(errors.length){ %>
@@ -29,6 +29,9 @@
                 <input type="text" class="form-control" name="name" placeholder="Name" required>
             </div>
             <div class="form-group">
+                <input type="text" class="form-control" name="username" pattern="[a-zA-Z0-9_]+" placeholder="Username (alphabets, digits, and underscore only)" required>
+            </div>
+            <div class="form-group">
                 <input type="email" class="form-control" name="email" placeholder="Email" required>
             </div>
             <div class="form-group">
@@ -38,9 +41,12 @@
                 <input type="text" class="form-control" name="address" placeholder="Address">
             </div>
             <div class="form-group">
-                <label for="profile">Profile Picture</label>
-                <input type="file" accept="image/*" class="form-control" name="profilePic" id="profile">
-                <input type="checkbox" class="my-3" name="orientation"> Tick this if image is Potrait.
+                <div class="form-control">
+                    <label for="profile">Profile Picture</label><br>
+                    <input type="file" accept="image/*" name="profilePic" id="profile">
+                    <small class="form-text text-muted">Preferably a square image.</small>
+                    <input type="checkbox" class="my-3" name="orientation"> Tick this if image is Potrait.
+                </div>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>

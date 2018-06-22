@@ -1,25 +1,57 @@
 const route = require('express').Router();
-const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt-nodejs');
 const auth = require('../utils/auth.js');
 const models = require('../models');
 const CONFIG = require('../config');
+const {smtpTransport} = require('../utils/nodemailer.js');
 
-const smtpTransport = nodemailer.createTransport({
-    service: CONFIG.NODE_MAILER.SERVICE,
-    auth: {
-        user: CONFIG.NODE_MAILER.USER,
-        pass: CONFIG.NODE_MAILER.PASS
-    }
-});
-
-
-route.get('/signup', auth.isLoggedIn, (req,res)=>{
-    res.render('adminApproval');
+route.get('/', auth.isLoggedIn, auth.isAdmin, (req,res)=>{
+    res.render('admin/index');
 })
 
+route.get('/signup', auth.isLoggedIn, (req,res)=>{
+    res.render('admin/approval');
+})
 
-
+route.get('/manage', auth.isLoggedIn, auth.isAdmin, (req,res)=>{
+    res.render('admin/manage');
+})
+route.post('/add', auth.isLoggedIn, auth.isAdmin, (req,res)=>{
+    models.User.findOne({username: req.body.username})
+    .then(user=> {
+        if(user){
+            user.isAdmin = true;
+            user.save();
+            req.flash('homePgMsg',`${user.name} is now an Admin.`);
+            res.redirect('/');
+        } else {
+            req.flash('homePgFail','No such User exists.');
+            res.redirect('/');
+        }
+    })
+    .catch(err=> {
+        console.log(err);
+        res.redirect('/');
+    })
+})
+route.get('/remove/:username', auth.isLoggedIn, auth.isAdmin, (req,res)=>{
+    models.User.findOne({username: req.params.username})
+        .then(user=> {
+            if(user){
+                user.isAdmin = false;
+                user.save();
+                req.flash('homePgMsg',`${user.name} is no longer Admin.`);
+                res.redirect('/');
+            } else {
+                req.flash('homePgFail','No such User exists.');
+                res.redirect('/');
+            }
+        })
+        .catch(err=> {
+            console.log(err);
+            res.redirect('/');
+        })
+})
 route.post('/signup', auth.isLoggedIn, (req,res) => {
     
     bcrypt.genSalt(10, (err, salt) => {
@@ -35,7 +67,8 @@ route.post('/signup', auth.isLoggedIn, (req,res) => {
                     subject : "Approval for New Admin",
                     html : `<p>Name: ${req.body.name}</p>
                             <p>Message: ${req.body.message}</p>
-                            <p>User: ${req.user._id}</p>
+                            <p>Email: ${req.user.email}</p>
+                            <p>Username: ${req.user.username}</p>
                             <strong><a href="${link}">Click here to verify</a></strong>`
                 }
                 smtpTransport.sendMail(mailOptions, (err,response) => {

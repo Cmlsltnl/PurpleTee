@@ -12,5 +12,6 @@ route.get('/', (req,res)=>{
 // Sub Routes
 route.use('/', require('./user'));
 route.use('/admin', require('./admin'));
+route.use('/api', require('./api'));
 
 module.exports = route;

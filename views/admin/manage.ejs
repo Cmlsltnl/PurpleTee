@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Manage</title>
+    
+    <% include ../partials/header.ejs %>
+    <script src="/js/admin/manage.js"></script>
+
+</head>
+<body>
+    <% include ../partials/navbar.ejs %>
+    <div class="container mt-4">
+        <h2 class="mb-4">Admin Manage</h2>
+        <form action="/admin/add" method="post" class="form-inline mb-4" onsubmit="return confirm('Confirm.');">
+            <div class="form-group mr-sm-3">
+                <input type="text" class="form-control" pattern="[a-zA-Z0-9_]+" name="username" placeholder="Username" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Add as Admin</button>
+        </form>
+        <div class="row" id="adminContainer">
+            <!-- individual admin to be added by js -->
+        </div>
+    </div>
+</body>
+</html>

@@ -39,6 +39,10 @@ app.use((req, res, next)=>{
 
 app.use('/', require('./routes'));
 
+app.get('*', (req,res)=>{
+    res.render('notExist');
+})
+
 app.listen(CONFIG.SERVER.PORT, ()=>{
     console.log(`Server Started at http://localhost:${CONFIG.SERVER.PORT}/`);
 })

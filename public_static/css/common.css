@@ -1,0 +1,24 @@
+.adminBox {
+    color: white;
+    font-size: 15px;
+    background: tomato;
+    width: 50px;
+    height: 25px;
+    margin: 5px;
+    padding: 1px 1px;
+    border: 1px solid rgba(0, 0, 0, .2);
+}
+.off-image{
+    width: 300px;
+    margin: 20px 0;
+}
+.on-image{
+    width: 200px;
+    margin: 50px 0;
+}
+.grav-image{
+    margin: 10px 0;
+}
+.rotate-image{
+    transform: rotate(90deg);
+}
