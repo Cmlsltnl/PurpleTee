@@ -39,6 +39,9 @@ app.use((req, res, next)=>{
 
 app.use('/', require('./routes'));
 
+app.get('/shelly', (req,res)=>{
+    res.render('shelly');
+})
 app.get('*', (req,res)=>{
     res.render('notExist');
 })

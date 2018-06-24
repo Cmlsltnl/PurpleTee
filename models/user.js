@@ -10,9 +10,13 @@ const userSchema = mongoose.Schema({
     isAdmin: {type: Boolean, default : false},
     orientation: {type: String, default: 'off'},
     address: String,
-    history: [{
-        date: Date,
-        paid: {type: Number, default: 0},
+    cart: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'item'
+    }],
+    wishlist: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'product'
     }]
 }, {
     usePushEach : true

@@ -3,7 +3,10 @@ const mongoose = require('mongoose');
 const productSchema = mongoose.Schema({
     images : [String],
     name : String, 
-    description: String,  
+    description: String, 
+    price: Number,  
+    gender: String,
+    status : String,
     designer : {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
@@ -11,8 +14,7 @@ const productSchema = mongoose.Schema({
     approvedBy : {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
-    },
-    status : String
+    }
 }, {
     usePushEach : true
 });

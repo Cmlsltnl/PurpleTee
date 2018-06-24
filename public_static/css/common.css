@@ -22,3 +22,20 @@
 .rotate-image{
     transform: rotate(90deg);
 }
+.showPwd{
+    cursor: pointer;
+}
+.showPwd:hover{
+    background: #e0e7ef;
+}
+.showPwd:active{
+    background: #d0e2f5;
+}
+.navbar-icon{
+    color: rgba(255,255,255,.50);
+    font-size: 20px;
+}
+.navbar-li :hover{
+    background: #823f68;
+    color: rgba(255,255,255,.75);
+}

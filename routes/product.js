@@ -32,6 +32,7 @@ route.get('/upload', auth.isLoggedIn, auth.isAdmin, (req,res) => {
 })
 
 route.post('/upload', auth.isLoggedIn, auth.isAdmin, (req,res) => {
+    console.log(typeof req.body.gender);
     const uploadMultiple = multer({ storage : storage }).array('productPic',20);
 
     uploadMultiple(req,res,function(err) {
@@ -44,8 +45,12 @@ route.post('/upload', auth.isLoggedIn, auth.isAdmin, (req,res) => {
                     req.flash('homePgFail', 'Error uploading product. Please try again.');
                     return res.redirect('/');
                 }
+                
+                console.log(req.body)
+                product.gender = req.body.gender;
                 product.name = req.body.name;
                 product.description = req.body.description;
+                product.price = req.body.price;
                 product.status = 'approved';
                 product.designer = req.user._id;
                 product.approvedBy = req.user._id;
@@ -84,6 +89,40 @@ route.get('/:id', (req,res)=>{
         .catch(err => {
             console.log(err);
             req.flash('homePgFail', 'No such product.');
+            res.redirect('/');
+        })
+})
+
+route.get('/:id/wishlist/:username', (req,res)=>{
+    models.Product
+        .findById(req.params.id)
+        .then(product=>{
+            if(!product){
+                req.flash('homePgFail', 'No such product exists.');
+                res.redirect('/');
+            } else {
+                models.User
+                    .findOne({username: req.params.username})
+                    .then(user=>{
+                        if(!user){                            
+                            req.flash('homePgFail', 'No such user exists.');
+                            res.redirect('/');
+                        } else {
+                            if(user.wishlist.indexOf(product.id) != -1){
+                                req.flash('success', 'Already added to wishlist.');
+                                res.redirect(`/product/${product.id}`);
+                            } else {
+                                user.wishlist.push(product.id);
+                                user.save();
+                                req.flash('success', 'Added to wishlist.');
+                                res.redirect(`/product/${product.id}`);
+                            }
+                        }
+                    })
+            }
+        })
+        .catch(err=>{
+            console.log(err);
             res.redirect('/');
         })
 })

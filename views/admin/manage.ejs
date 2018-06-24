@@ -12,7 +12,7 @@
     <% include ../partials/navbar.ejs %>
     <div class="container mt-4">
         <h2 class="mb-4">Admin Manage</h2>
-        <form action="/admin/add" method="post" class="form-inline mb-4" onsubmit="return confirm('Confirm.');">
+        <form action="/admin/add" method="post" class="form-inline mb-4" onsubmit="return confirm('Confirm: Add as admin.');">
             <div class="form-group mr-sm-3">
                 <input type="text" class="form-control" pattern="[a-zA-Z0-9_]+" name="username" placeholder="Username" required>
             </div>

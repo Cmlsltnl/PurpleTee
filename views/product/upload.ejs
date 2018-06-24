@@ -18,13 +18,28 @@
                 <div class="form-group">
                     <textarea name="description" class="form-control" cols="30" rows="4" placeholder="Description"></textarea>
                 </div>
-                <div id="imagesContainer">
-                    <div class="form-group">
-                        <div class="form-control">
-                            <input type="file" accept="image/*" name="productPic" id="profile" multiple/>
-                            <!-- must add required in above input -->
-                            <small class="form-text text-muted">Minimum: 1 | Maximum: 20</small>
-                        </div>
+                <div class="form-group">
+                    <div class="input-group">
+                      <div class="input-group-addon">
+                        <div class="input-group-text">₹</div>
+                      </div>
+                      <input type="number" class="form-control" name="price" placeholder="Price" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-control">
+                        <label>Available for: </label><br>
+                        <input type="radio" name="gender" value="Men" checked> Men
+                        <input type="radio" name="gender" class="ml-4" value="Women"> Women
+                        <input type="radio" name="gender" class="ml-4" value="Both Men and Women"> Both Men and Women  
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-control">
+                        <input type="file" accept="image/*" name="productPic" id="profile" multiple/>
+                        <!-- must add required in above input -->
+                        <small class="form-text text-muted">Minimum: 1 | Maximum: 20</small>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>

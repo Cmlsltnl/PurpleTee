@@ -160,6 +160,71 @@ route.post('/login', passport.authenticate('local', {
     successFlash: true,
     failureFlash: true
 }))
+route.get('/:username/cart', (req,res)=>{
+    models.User
+        .findOne({username: req.params.username})
+        .then(profileUser => {
+            if(!profileUser){
+                req.flash('homePgFail', 'No such user exists.');
+                res.redirect('/');
+            }
+            res.render('user/cart');
+        })
+        .catch(err => {
+            console.log(err);
+            res.redirect('/');
+        })
+})
+route.get('/:username/wishlist', (req,res)=>{
+    models.User
+        .findOne({username: req.params.username})
+        .populate('wishlist')
+        .then(profileUser => {
+            if(!profileUser){
+                req.flash('homePgFail', 'No such user exists.');
+                res.redirect('/');
+            } else {
+                res.render('user/wishlist', {populatedUser: profileUser, success: req.flash('success'), fail: req.flash('fail')});
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.redirect('/');
+        })
+})
+
+route.get('/:username/wishlist/remove/:productId', (req,res)=>{
+    models.User
+        .findOne({username: req.params.username})
+        .then(user=>{
+            if(!user){
+                req.flash('homePgFail', 'No such user exists.');
+                res.redirect('/');
+            } else {
+                models.Product
+                    .findById(req.params.productId)
+                    .then(product=>{
+                        if(!product){                            
+                            req.flash('homePgFail', 'No such product exists.');
+                            res.redirect('/');
+                        } else {
+                            if(user.wishlist.indexOf(product.id) == -1){
+                                res.redirect(`/${user.username}/wishlist`);
+                            } else {
+                                user.wishlist.splice(user.wishlist.indexOf(product.id),1);
+                                user.save();
+                                req.flash('success', 'Removed from wishlist.');
+                                res.redirect(`/${user.username}/wishlist`);
+                            }
+                        }
+                    })
+            }
+        })
+        .catch(err=>{
+            console.log(err);
+            res.redirect('/');
+        })
+})
 
 route.get('/users', (req,res)=>{
     res.render('user/users.ejs');

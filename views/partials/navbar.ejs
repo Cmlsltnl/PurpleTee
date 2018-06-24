@@ -24,10 +24,15 @@
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="/profile/<%= user.username%>">Profile</a>
-                  <a class="dropdown-item" href="/cart">Cart</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="/logout">Logout</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="/logout">Logout</a>
               </div>
+              <li class="nav-item navbar-li" style>
+                <a class="dropdown-item navbar-icon" href="/<%= user.username%>/cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
+              </li>
+              <li class="nav-item navbar-li">
+                <a class="dropdown-item navbar-icon" href="/<%= user.username%>/wishlist"><i class="fa fa-heart" aria-hidden="true"></i></a>
+              </li>
             <% } %>
         </li>
         <% if(user && user.isAdmin) { %>

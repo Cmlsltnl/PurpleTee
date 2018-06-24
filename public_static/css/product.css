@@ -1,0 +1,14 @@
+.product-link{
+    color: black;
+}
+.product-link:link {
+    background: #efdcea;
+}
+.product-link:hover {
+    background: #efc9e5;
+    color:black;
+    text-decoration: none;
+}
+.product-link:active {
+    background: #e8b7db;
+}

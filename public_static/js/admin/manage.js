@@ -28,7 +28,7 @@ function appendAdmin(admin) {
                         </h5>
                         <p class="card-text">${admin.name}</p>
                         <a href="/profile/${admin.username}" class="btn btn-sm btn-primary">See Profile</a>
-                        <a href="/admin/remove/${admin.username}" class="btn btn-sm btn-danger"  onclick="return confirm('Confirm.');">Remove as Admin</a>
+                        <a href="/admin/remove/${admin.username}" class="btn btn-sm btn-danger"  onclick="return confirm('Confirm: Remove as admin.');">Remove as Admin></a>
                     </div>
                 </div>
             </div>
