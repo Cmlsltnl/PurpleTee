@@ -7,6 +7,7 @@ const productSchema = mongoose.Schema({
     price: Number,  
     gender: String,
     status : String,
+    rejectReason: String, 
     designer : {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'

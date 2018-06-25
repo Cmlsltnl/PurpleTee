@@ -43,18 +43,32 @@
         <% } %>
         <div class="row" style="margin-top: 20px">
             <div class="col-sm-6">
-                <p>Description: <%= product.description%></p>
+                <% if(product.description) { %>
+                    <p>Description: <%= product.description%></p>
+                <% } %>    
                 <p>Available for: <%= product.gender%></p>
                 <p>Price: ₹ <%= product.price%>.00</p>
                 <p>Status: <%= product.status%></p>
                 <p>Designer: <a href="/<%= product.designer.username%>/profile">@<%= product.designer.username%></a></p>
-                <% if(user && user.isAdmin) { %>
+
+                <% if(product.status =='rejected' && user && (user.isAdmin || user.id==product.designer.id)) { %>
+                    <p>Rejected By: <a href="/<%= product.approvedBy.username%>/profile">@<%= product.approvedBy.username%></a></p>
+                    <p>Reject Reason: <%= product.rejectReason%></p>
+                <% } else if(product.status!='pending' && user && user.isAdmin) { %>
                     <p>Approved By: <a href="/<%= product.approvedBy.username%>/profile">@<%= product.approvedBy.username%></a></p>
                 <% } %>
+
+                <% if(user && user.isAdmin && product.status == 'pending') { %>
+                    <a href="/product/<%= product.id%>/approve" class="btn btn-lg btn-primary">Approve</a>
+                    <a href="/product/<%= product.id%>/reject" class="btn btn-lg btn-danger">Reject</a>
+                <% } %>
             </div>
+            <% if(product.status == 'in stock' || product.status == 'out of stock') { %>
             <% if(user){ %>
                 <div class="col-sm-3 mt-4">
+                   <% if(product.status == 'in stock') { %>
                     <form action="/product/<%= product.id %>/cart/<%= user.username%>" method="post" onsubmit="return confirm('Confirm: Add to cart.')">
+                        <button type="submit" id="cart-button" class="product-buttons mb-4"><i class="fa fa-cart-plus" aria-hidden="true" style="font-size: 100px"></i></button>
                         <% if(product.gender == "Men") { %>
                             <div class="form-group">
                                 <input type="radio" name="gender" value="Men" checked> Men
@@ -78,8 +92,11 @@
                         <div class="form-group">
                             <input type="number" name="quantity" value="1" min="1" class="form-control" required>
                         </div>
-                        <button type="submit" id="cart-button" class="product-buttons"><i class="fa fa-cart-plus" aria-hidden="true" style="font-size: 100px"></i></button>
                     </form>
+                    <% } else { %>
+                        <a><i class="fa fa-cart-plus" aria-hidden="true" style="font-size: 100px"></i></a>
+                        <p class="text-muted mt-4">The product is currently out of stock. Add it to your wishlist to be notified when it becomes available again.</p>
+                    <% } %>
                 </div>
                 <div class="col-sm-3 mt-4">
                     <a href="/product/<%= product.id%>/wishlist/<%= user.username%>" class="product-buttons" onclick="return confirm('Confirm: Add to wishlist.')"><i class="fa fa-heart mt-2" aria-hidden="true" style="font-size: 100px"></i></a>
@@ -96,6 +113,7 @@
                         <p class="text-muted mt-4">You need to be logged in to add to cart/wishlist.</p>
                     </div>
                 </div>
+            <% } %>
             <% } %>
         </div>
     </div>

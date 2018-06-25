@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Approve Product</title>
+    
+    <% include ../partials/header.ejs %>
+
+</head>
+<body>
+    <% include ../partials/navbar.ejs %>
+    <div class="container mt-4">
+            <h2 class="mb-4">Approve Product</h2>
+            <% if(product.images.length) { %>
+                <div class="row">
+                    <% product.images.forEach(image => { %>
+                        <div class="col-lg-4 col-sm-12">
+                            <img src='<%= image%>' class="img-fluid">
+                        </div>
+                    <% }) %>
+                </div>
+            <% } %>
+            <p class="ml-2 my-4">Designed By: @<%=product.designer.username%></p>
+            <form action="/product/<%= product.id%>/approve" method="post">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="name" placeholder="Name" value="<%= product.name%>" required>
+                </div>
+                <div class="form-group">
+                    <textarea name="description" class="form-control" cols="30" rows="4" placeholder="Description"><%= product.description%></textarea>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                      <div class="input-group-addon">
+                        <div class="input-group-text">₹</div>
+                      </div>
+                      <input type="number" class="form-control" name="price" placeholder="Price" value="<%= product.price%>" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-control">
+                        <label>Available for: </label><br>
+                        <% if(product.gender == 'Men') { %>
+                            <input type="radio" name="gender" value="Men" checked> Men
+                            <input type="radio" name="gender" class="ml-4" value="Women"> Women
+                            <input type="radio" name="gender" class="ml-4" value="Both Men and Women"> Both Men and Women  
+                        <% } else if(product.gender == 'Women') { %>
+                            <input type="radio" name="gender" value="Men"> Men
+                            <input type="radio" name="gender" class="ml-4" value="Women" checked> Women
+                            <input type="radio" name="gender" class="ml-4" value="Both Men and Women"> Both Men and Women  
+                        <% } else { %>
+                            <input type="radio" name="gender" value="Men"> Men
+                            <input type="radio" name="gender" class="ml-4" value="Women"> Women
+                            <input type="radio" name="gender" class="ml-4" value="Both Men and Women" checked> Both Men and Women  
+                        <% } %>    
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Approve</button>
+            </form>
+    </div>
+</body>
+</html>

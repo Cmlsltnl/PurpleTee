@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reject Product</title>
+    
+    <% include ../partials/header.ejs %>
+
+</head>
+<body>
+    <% include ../partials/navbar.ejs %>
+
+    <div class="container mt-4">
+        <h2>Reject Product</h2>
+        <form action="/product/<%= product.id%>/reject" class="mt-4" method="post">
+            <div class="form-group">
+                <textarea name="rejectReason" class="form-control" cols="30" rows="4" placeholder="Reject Reason"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+</body>
+</html>

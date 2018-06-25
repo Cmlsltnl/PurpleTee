@@ -11,6 +11,9 @@
     <% include ../partials/navbar.ejs %>
     <div class="container mt-4">
             <h2 class="mb-4">Upload Product</h2>
+            <% if(!user.isAdmin) { %>
+                <p class="text-muted">Insert text here explaining designers about the procedure, that they'll first upload, and then it'll be approved and only then will it be showcased to users.</p>
+            <% } %>
             <form action="/product/upload" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <input type="text" class="form-control" name="name" placeholder="Name" required>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Approve Product</title>
+    
+    <% include ../partials/header.ejs %>
+    <link rel="stylesheet" href="/css/product.css">
+
+</head>
+<body>
+    <% include ../partials/navbar.ejs %>
+    <div class="container mt-4">
+        <h2>Approve Product</h2>
+        <div class="row" id="productContainer">
+        <% products.forEach(product => { %>
+            <div class="col-lg-6 com-sm-12">
+                <div class="card my-2">
+                <a href="/product/<%=product._id%>" class="product-link">
+                            
+                <div class="card-body row">
+                    <div class="col-lg-4 com-sm-12">
+                        <img class="img-fluid mb-2" src="<%=product.images[0]%>">
+                    </div>
+                    <div class="col-lg-8 col-sm-12">
+                        <h5 class="card-title"><%=product.name%> 
+                            <span class="adminBox inline"><%=product.status%></span>
+                        </h5>
+                        <p class="card-text">₹ <%=product.price%>.00</p>
+                        <p class="card-text"><%=product.gender%></p>
+                    </div>
+                </div>
+                </a>
+
+                </div>
+            </div>
+        <% }) %>
+    </div>
+</body>
+</html>

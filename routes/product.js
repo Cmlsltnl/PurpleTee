@@ -27,11 +27,11 @@ const uploadImageandCreateProduct = (req, next) => {
     }
 }
 
-route.get('/upload', auth.isLoggedIn, auth.isAdmin, (req,res) => {
+route.get('/upload', auth.isLoggedIn, (req,res) => {
     res.render('product/upload');
 })
 
-route.post('/upload', auth.isLoggedIn, auth.isAdmin, (req,res) => {
+route.post('/upload', auth.isLoggedIn, (req,res) => {
     const uploadMultiple = multer({ storage : storage }).array('productPic',20);
 
     uploadMultiple(req,res,function(err) {
@@ -49,15 +49,23 @@ route.post('/upload', auth.isLoggedIn, auth.isAdmin, (req,res) => {
                 product.name = req.body.name;
                 product.description = req.body.description;
                 product.price = req.body.price;
-                product.status = 'approved';
                 product.designer = req.user._id;
-                product.approvedBy = req.user._id;
+
+                if(req.user.isAdmin){
+                    product.status = 'in stock';
+                    product.approvedBy = req.user._id;
+                } else {
+                    product.status = 'pending';
+                }
 
 
                 product
                     .save()
                     .then(product => {
-                        req.flash('success', 'Successfully uploaded the product.');
+                        if(req.user.isAdmin)
+                            req.flash('success', 'Successfully uploaded the product.');
+                        else
+                            req.flash('success', 'Successfully submitted the product for approval.');
                         res.redirect(`/product/${product.id}`);
                     })      
                     .catch(err => {
@@ -68,8 +76,110 @@ route.post('/upload', auth.isLoggedIn, auth.isAdmin, (req,res) => {
         });
 })
 
+route.get('/approve', (req,res)=>{
+    models.Product
+        .find({status: 'pending'})
+        .then(products => {
+            res.render('product/pending', {products: products});
+        })
+        .catch(err => {
+            console.log(err);
+            res.redirect('/');
+        })
+})
+
+route.get('/:id/approve', (req,res)=>{
+    models.Product
+        .findById(req.params.id)
+        .populate('designer')
+        .then(product => {
+            if(!product){
+                req.flash('homePgFail', 'No such product exists.');
+                res.redirect('/');
+            }
+            res.render('product/approve', {product});
+        })
+        .catch(err => {
+            console.log(err);
+            res.redirect('/');
+        })
+})
+
+route.post('/:id/approve', (req,res)=>{
+    models.Product
+    .findById(req.params.id)
+    .then(product => {
+        if(!product){
+            req.flash('homePgFail', 'No such product exists.');
+            res.redirect('/');
+        }
+
+        product.gender = req.body.gender;
+        product.name = req.body.name;
+        product.description = req.body.description;
+        product.price = req.body.price;
+        product.status = 'in stock';
+        product.approvedBy = req.user._id;
+
+        product
+            .save()
+            .then(product => {
+                req.flash('success', 'Successfully approved the product.');
+                res.redirect(`/product/${product.id}`);
+            })      
+
+    })
+    .catch(err => {
+        console.log(err);
+        res.redirect('/');
+    })
+})
+
+route.get('/:id/reject', (req,res)=>{
+    models.Product
+    .findById(req.params.id)
+    .then(product => {
+        if(!product){
+            req.flash('homePgFail', 'No such product exists.');
+            res.redirect('/');
+        }
+        res.render('product/reject', {product});
+    })
+    .catch(err => {
+        console.log(err);
+        res.redirect('/');
+    })
+})
+
+route.post('/:id/reject', (req,res)=>{
+    models.Product
+    .findById(req.params.id)
+    .then(product => {
+        if(!product){
+            req.flash('homePgFail', 'No such product exists.');
+            res.redirect('/');
+        }
+
+        product.status = 'rejected';
+        product.rejectReason = req.body.rejectReason; 
+        product.approvedBy = req.user._id;
+
+        product
+            .save()
+            .then(product => {
+                req.flash('success', 'Successfully rejected the product.');
+                res.redirect(`/product/${product.id}`);
+            })      
+
+    })
+    .catch(err => {
+        console.log(err);
+        res.redirect('/');
+    })
+})
+
 route.get('/', (req,res)=>{
-    res.render('product/products.ejs');
+    res.render('product/products');
 })
 
 route.get('/:id', (req,res)=>{
