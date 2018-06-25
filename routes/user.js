@@ -177,6 +177,40 @@ route.get('/:username/cart', (req,res)=>{
             res.redirect('/');
         })
 })
+
+route.get('/:username/cart/remove/:itemId', (req,res)=>{
+    models.User
+        .findOne({username: req.params.username})
+        .then(user=>{
+            if(!user){
+                req.flash('homePgFail', 'No such user exists.');
+                res.redirect('/');
+            } else {
+                models.Item
+                    .findById(req.params.itemId)
+                    .then(item =>{
+                        if(!item){                            
+                            req.flash('homePgFail', 'No such item exists in your cart.');
+                            res.redirect('/');
+                        } else {
+                            if(user.cart.indexOf(item.id) == -1){
+                                res.redirect(`/${user.username}/cart`);
+                            } else {
+                                user.cart.splice(user.cart.indexOf(item.id),1);
+                                user.save();
+                                req.flash('success', 'Removed from cart.');
+                                res.redirect(`/${user.username}/cart`);                    
+                            }
+                        }
+                    })
+            }
+        })
+        .catch(err=>{
+            console.log(err);
+            res.redirect('/');
+        })
+})
+
 route.get('/:username/wishlist', (req,res)=>{
     models.User
         .findOne({username: req.params.username})

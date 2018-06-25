@@ -36,7 +36,7 @@
         
         <div class="my-4">
             <span class="h3 px-3" id="total">TOTAL: ₹ </span>
-            <button class="btn btn-lg btn-success  mr-auto">Proceed to Checkout ></button>
+            <button class="btn btn-lg btn-success mr-auto" id="checkout-btn">Proceed to Checkout ></button>
         </div>
         
         <div class="row">
@@ -54,8 +54,8 @@
                             </h5>
                             <p class="card-text"><%= item.quantity%> x ₹ <%=item.product.price%>.00 = ₹ <span class="item-total"><%= item.product.price * item.quantity %>.00</span></p>
                             <p class="card-text"><%=item.gender%></p>
-                            <form action="/<%= user.username%>/wishlist/remove/<%= item.product.id%>" method="get">
-                                <button href="" class="btn btn-sm btn-primary" onclick="return confirm('Confirm: Remove from wishlist.');">Remove</button>
+                            <form action="/<%= user.username%>/cart/remove/<%= item.id%>" method="get">
+                                <button class="btn btn-sm btn-primary" onclick="return confirm('Confirm: Remove from cart.');">Remove</button>
                             </form>
                         </div>
                     </div>
