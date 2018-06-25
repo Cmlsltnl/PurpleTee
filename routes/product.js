@@ -32,7 +32,6 @@ route.get('/upload', auth.isLoggedIn, auth.isAdmin, (req,res) => {
 })
 
 route.post('/upload', auth.isLoggedIn, auth.isAdmin, (req,res) => {
-    console.log(typeof req.body.gender);
     const uploadMultiple = multer({ storage : storage }).array('productPic',20);
 
     uploadMultiple(req,res,function(err) {
@@ -46,7 +45,6 @@ route.post('/upload', auth.isLoggedIn, auth.isAdmin, (req,res) => {
                     return res.redirect('/');
                 }
                 
-                console.log(req.body)
                 product.gender = req.body.gender;
                 product.name = req.body.name;
                 product.description = req.body.description;
@@ -117,6 +115,42 @@ route.get('/:id/wishlist/:username', (req,res)=>{
                                 req.flash('success', 'Added to wishlist.');
                                 res.redirect(`/product/${product.id}`);
                             }
+                        }
+                    })
+            }
+        })
+        .catch(err=>{
+            console.log(err);
+            res.redirect('/');
+        })
+})
+route.post('/:id/cart/:username', (req,res)=>{
+    models.Product
+        .findById(req.params.id)
+        .then(product=>{
+            if(!product){
+                req.flash('homePgFail', 'No such product exists.');
+                res.redirect('/');
+            } else {
+                models.User
+                    .findOne({username: req.params.username})
+                    .then(user=>{
+                        if(!user){                            
+                            req.flash('homePgFail', 'No such user exists.');
+                            res.redirect('/');
+                        } else {
+                            models.Item.create({
+                                ...req.body,
+                                product: product._id
+                            })
+                            .then(item=>{
+                                user.cart.push(item);
+                                return user.save();
+                            })
+                            .then(savedUser=>{
+                                req.flash('success', 'Added to cart.');
+                                res.redirect(`/product/${product.id}`);    
+                            })
                         }
                     })
             }

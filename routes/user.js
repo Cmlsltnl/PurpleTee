@@ -82,7 +82,7 @@ route.post('/signup', upload.single('profilePic'), (req,res,next) => {
             res.redirect('/signup');
         })
 })
-route.post('/profile/:username/edit', auth.isLoggedIn, auth.checkCorrectUser, upload.single('profilePic'), (req,res,next) => {
+route.post('/:username/profile/edit', auth.isLoggedIn, auth.checkCorrectUser, upload.single('profilePic'), (req,res,next) => {
     models.User
         .findById(req.user._id)
         .then(user => {
@@ -90,11 +90,11 @@ route.post('/profile/:username/edit', auth.isLoggedIn, auth.checkCorrectUser, up
         })
         .then(user => {
             req.flash('editSuccess', 'Successfully edited your profile!');
-            res.redirect(`/profile/${user.username}`);
+            res.redirect(`/${user.username}/profile`);
         })
         .catch(err => {
             return next(err);
-            res.redirect(`/profile/${user.username}`);
+            res.redirect(`/${user.username}/profile`);
         })
 })
 
@@ -125,7 +125,7 @@ route.get('/profile', (req,res) => {
         .findById(req.query.userId)
         .then(profileUser => {
             if(profileUser)
-                res.redirect(`/profile/${profileUser.username}`);
+                res.redirect(`/${profileUser.username}/profile`);
             else {
                 req.flash('homePgFail','No such User exists.');
                 res.redirect('/');
@@ -136,7 +136,7 @@ route.get('/profile', (req,res) => {
             res.redirect('/');
         })
 })
-route.get('/profile/:username', (req,res,next) => {
+route.get('/:username/profile', (req,res,next) => {
     models.User
         .findOne({username: req.params.username})
         .then(profileUser => {
@@ -151,7 +151,7 @@ route.get('/profile/:username', (req,res,next) => {
             return next(err);
         })
 })
-route.get('/profile/:username/edit', auth.isLoggedIn, auth.checkCorrectUser, (req,res,next) =>{
+route.get('/:username/profile/edit', auth.isLoggedIn, auth.checkCorrectUser, (req,res,next) =>{
     res.render('user/editProfile.ejs');
 })
 route.post('/login', passport.authenticate('local', {
@@ -163,12 +163,14 @@ route.post('/login', passport.authenticate('local', {
 route.get('/:username/cart', (req,res)=>{
     models.User
         .findOne({username: req.params.username})
+        .populate({path : 'cart', populate : {path : 'product'}})
         .then(profileUser => {
             if(!profileUser){
                 req.flash('homePgFail', 'No such user exists.');
                 res.redirect('/');
+            } else {
+                res.render('user/cart', {populatedUser: profileUser, success: req.flash('success'), fail: req.flash('fail')});
             }
-            res.render('user/cart');
         })
         .catch(err => {
             console.log(err);
@@ -226,8 +228,12 @@ route.get('/:username/wishlist/remove/:productId', (req,res)=>{
         })
 })
 
+route.get('/:username/notifications', (req,res)=>{
+    res.render('user/notifications');
+})
+
 route.get('/users', (req,res)=>{
-    res.render('user/users.ejs');
+    res.render('user/users');
 })
 
 module.exports = route;

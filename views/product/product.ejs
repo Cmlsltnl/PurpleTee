@@ -5,6 +5,7 @@
     <title>Product | <%= product.name %></title>
     
     <% include ../partials/header.ejs %>
+    <link rel="stylesheet" href="/css/product.css">
 
 </head>
 <body>
@@ -46,20 +47,42 @@
                 <p>Available for: <%= product.gender%></p>
                 <p>Price: ₹ <%= product.price%>.00</p>
                 <p>Status: <%= product.status%></p>
-                <p>Designer: <a href="/profile/<%= product.designer.username%>">@<%= product.designer.username%></a></p>
+                <p>Designer: <a href="/<%= product.designer.username%>/profile">@<%= product.designer.username%></a></p>
                 <% if(user && user.isAdmin) { %>
-                    <p>Approved By: <a href="/profile/<%= product.approvedBy.username%>">@<%= product.approvedBy.username%></a></p>
+                    <p>Approved By: <a href="/<%= product.approvedBy.username%>/profile">@<%= product.approvedBy.username%></a></p>
                 <% } %>
             </div>
             <% if(user){ %>
                 <div class="col-sm-3 mt-4">
-                    <a href="#" onclick="return confirm('Confirm: Add to cart.')"><i class="fa fa-cart-plus" aria-hidden="true" style="font-size: 100px"></i></a>
-                    <p>Add to Cart</p>
-                    <input type="number" value="1" min="1">
+                    <form action="/product/<%= product.id %>/cart/<%= user.username%>" method="post" onsubmit="return confirm('Confirm: Add to cart.')">
+                        <% if(product.gender == "Men") { %>
+                            <div class="form-group">
+                                <input type="radio" name="gender" value="Men" checked> Men
+                            </div>
+                        <% } else if(product.gender == "Women") { %>
+                            <div class="form-group">
+                                <input type="radio" name="gender" value="Women" checked> Women
+                            </div>        
+                        <% } else { %>
+                            <div class="form-group">
+                                <input type="radio" name="gender" value="Men" checked> Men
+                                <input type="radio" name="gender" value="Women"> Women
+                            </div>        
+                        <% } %>
+                        <div class="form-group">
+                            <input type="radio" name="size" value="S" checked> S
+                            <input type="radio" name="size" value="M"> M
+                            <input type="radio" name="size" value="L"> L
+                            <input type="radio" name="size" value="XL"> XL
+                        </div>
+                        <div class="form-group">
+                            <input type="number" name="quantity" value="1" min="1" class="form-control" required>
+                        </div>
+                        <button type="submit" id="cart-button" class="product-buttons"><i class="fa fa-cart-plus" aria-hidden="true" style="font-size: 100px"></i></button>
+                    </form>
                 </div>
                 <div class="col-sm-3 mt-4">
-                    <a href="/product/<%= product.id%>/wishlist/<%= user.username%>" onclick="return confirm('Confirm: Add to wishlist.')"><i class="fa fa-heart" aria-hidden="true" style="font-size: 100px"></i></a>
-                    <p>Add to Wishlist</p>
+                    <a href="/product/<%= product.id%>/wishlist/<%= user.username%>" class="product-buttons" onclick="return confirm('Confirm: Add to wishlist.')"><i class="fa fa-heart mt-2" aria-hidden="true" style="font-size: 100px"></i></a>
                 </div>
             <% } else { %>
                 <div class="col-sm-6">

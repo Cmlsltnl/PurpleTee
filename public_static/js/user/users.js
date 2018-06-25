@@ -29,7 +29,7 @@ function appendUser(singleUser) {
                                 <span class="adminBox inline">Admin</span>
                             </h5>
                             <p class="card-text">${singleUser.name}</p>
-                            <a href="/profile/${singleUser.username}" class="btn btn-sm btn-primary">See Profile</a>
+                            <a href="/${singleUser.username}/profile" class="btn btn-sm btn-primary">See Profile</a>
                         </div>
                     </div>
                 </div>
@@ -46,7 +46,7 @@ function appendUser(singleUser) {
                         <div class="col-lg-8 col-sm-12">
                             <h5 class="card-title">@${singleUser.username}</h5>
                             <p class="card-text">${singleUser.name}</p>
-                            <a href="/profile/${singleUser.username}" class="btn btn-sm btn-primary">See Profile</a>
+                            <a href="/${singleUser.username}/profile" class="btn btn-sm btn-primary">See Profile</a>
                         </div>
                     </div>
                 </div>
