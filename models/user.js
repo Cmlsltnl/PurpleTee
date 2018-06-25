@@ -17,6 +17,10 @@ const userSchema = mongoose.Schema({
     wishlist: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'product'
+    }],
+    designs: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'product'
     }]
 }, {
     usePushEach : true

@@ -262,6 +262,24 @@ route.get('/:username/wishlist/remove/:productId', (req,res)=>{
         })
 })
 
+route.get('/:username/designs', (req, res)=>{
+    models.User
+        .findOne({username: req.params.username})
+        .populate('designs')
+        .then(profileUser => {
+            if(!profileUser){
+                req.flash('homePgFail', 'No such user exists.');
+                res.redirect('/');
+            } else {
+                res.render('user/designs', {populatedUser: profileUser, success: req.flash('success'), fail: req.flash('fail')});
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.redirect('/');
+        })
+})
+
 route.get('/:username/notifications', (req,res)=>{
     res.render('user/notifications');
 })

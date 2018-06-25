@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Designs | <%=user.name%></title>
+    
+    <% include ../partials/header.ejs %>
+    <link rel="stylesheet" href="/css/product.css">
+
+</head>
+<body>
+    <% include ../partials/navbar.ejs %>
+    <div class="container mt-4">
+            <% if(success.length){ %>
+                <div class="alert alert-success alert-dismissable fade show">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">
+                            &times; <!--  x button -->
+                        </span>
+                    </button>
+                    <%= success %>
+                </div>
+            <% } %>
+            <% if(fail.length){ %>
+                <div class="alert alert-danger alert-dismissable fade show">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">
+                            &times; <!--  x button -->
+                        </span>
+                    </button>
+                    <%= fail %>
+                </div>
+            <% } %>
+            
+        <h2>Designs</h2>
+
+        <div class="row">
+        <% populatedUser.designs.forEach((product)=> {%>
+            <div class="col-lg-6 com-sm-12">
+                <div class="card my-2">
+                    <a href="/product/<%=product._id%>" class="product-link">                               
+                    <div class="card-body row">
+                        <div class="col-lg-4 com-sm-12">
+                            <img class="img-fluid mb-2" src="<%=product.images[0]%>">
+                        </div>
+                        <div class="col-lg-8 col-sm-12">
+                            <h5 class="card-title"><%=product.name%> 
+                                <span class="adminBox inline"><%=product.status%></span>
+                            </h5>
+                            <p class="card-text">₹ <%=product.price%>.00</p>
+                            <p class="card-text"><%=product.gender%></p>
+                            <form action="/<%= user.username%>/wishlist/remove/<%= product.id%>" method="get">
+                                <button href="" class="btn btn-sm btn-primary" onclick="return confirm('Confirm: Remove from wishlist.');">Remove</button>
+                            </form>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+
+            </div>
+        <% }) %>
+        </div>
+    </div>
+</body>
+</html>

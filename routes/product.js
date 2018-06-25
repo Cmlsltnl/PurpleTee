@@ -62,12 +62,19 @@ route.post('/upload', auth.isLoggedIn, (req,res) => {
                 product
                     .save()
                     .then(product => {
+                        return models.User.findById(req.user.id);
+                    })
+                    .then(user=> {
+                        user.designs.push(product.id);
+                        return user.save();
+                    })      
+                    .then(user=>{
                         if(req.user.isAdmin)
                             req.flash('success', 'Successfully uploaded the product.');
                         else
                             req.flash('success', 'Successfully submitted the product for approval.');
                         res.redirect(`/product/${product.id}`);
-                    })      
+                    })
                     .catch(err => {
                         req.flash('homePgFail', 'Error uploading product. Please try again.');
                         return res.redirect('/');    
